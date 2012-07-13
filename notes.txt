@@ -1,0 +1,19 @@
+Squirt - a plugin to add new blocks
+
+- use reflection to extend Material enum in Bukkit
+- and add new Block to net.minecraft.server.Block
+- do via plugin so no custom server builds required
+
+client:
+- a Minecraft Forge mod to add new blocks
+- make it connect without server having Forge..must be able to
+- and compatible with other mods compatible with Forge! very important (Rei Minimap, Worldedit CUI, etc.)
+
+- plugin channel to transfer block texture (+ properties) server -> client
+- if no client mod, send as other configurable placeholder block instead to client
+
+
+see also:
+- Spout http://www.spout.org/ - not compatible with mods
+- MCPC http://www.mcportcentral.co.za/ - requires custom unofficial server build
+
