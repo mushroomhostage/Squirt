@@ -25,14 +25,26 @@ import java.lang.reflect.*;
 public class Squirt extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
+        @SuppressWarnings("unchecked")
     public void onEnable() {
         log.info("enabling");
         Material material = addEnum(Material.class, "X255", new Class[] { int.class }, new Object[] { 255 });
+        log.info("added material " + material);
 
         // TODO: set Material.byId - and extend from 383 to 32000
-        // TODO: set Material.BY_NAME
 
-        log.info("added material " + material);
+        // TODO: set Material.BY_NAME
+        try {
+            Field field = Material.class.getDeclaredField("BY_NAME");
+            field.setAccessible(true);
+            Object object = field.get(null);
+            Map<String, Material> BY_NAME = (Map<String, Material>)object;
+            BY_NAME.put("X255", material);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        log.info("getMaterial = " + Material.getMaterial("X255"));
     }
 
     public void onDisable() {
