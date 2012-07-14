@@ -11,6 +11,7 @@ public class mod_Squirt extends NetworkMod {
     public mod_Squirt() {
         pb/*Block*/ block = new BlockExample(255, 0, acn.e/*Material.something*/).c(3F).b(10F).a("Example");
         ModLoader.registerBlock(block);
+        ModLoader.addName(block, "Example Block from Squirt");
     }
 
     public void load() {
