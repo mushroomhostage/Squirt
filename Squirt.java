@@ -54,7 +54,15 @@ public class Squirt extends JavaPlugin implements Listener {
 
         log.info("getMaterial = " + Material.getMaterial("X255"));
 
-        // TODO: set Material.byId - and extend from 383 to 32000
+        try {
+            Field field = Material.class.getDeclaredField("byId");
+            field.setAccessible(true);
+            Object object = field.get(null);
+            Material[] byId = (Material[])object;
+            byId[id] = material;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         log.info("getMaterial = " + Material.getMaterial(255));
     }
