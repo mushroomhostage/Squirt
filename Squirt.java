@@ -22,6 +22,12 @@ import java.util.*;
 import java.util.logging.*;
 import java.lang.reflect.*;
 
+class BlockExample extends net.minecraft.server.Block {
+    protected BlockExample(int i, int j, net.minecraft.server.Material material) {
+        super(i, j, material);
+    }
+}
+
 public class Squirt extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
@@ -29,10 +35,32 @@ public class Squirt extends JavaPlugin implements Listener {
         log.info("enabling");
 
         addMaterial("X255", 255);
+        try {
+            registerBlock(new BlockExample(255, 0, net.minecraft.server.Material.STONE), null);
+        } catch (Exception e) {
+            // note, re-registers again and conflicts if /reload
+            e.printStackTrace();
+        }
 
+
+        log.info("block = " + net.minecraft.server.Block.byId[255]);
     }
 
     public void onDisable() {
+    }
+
+    // call ItemBlock constructor
+    // see also https://github.com/cpw/FML/blob/master/server/net/minecraft/src/ServerRegistry.java#L44
+    public void registerBlock(net.minecraft.server.Block block, Class <? extends net.minecraft.server.ItemBlock > itemclass) {
+        if (itemclass == null) {
+            itemclass = net.minecraft.server.ItemBlock.class;
+        }
+
+        try {
+            itemclass.getConstructor(int.class).newInstance(block.id - 256);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -52,19 +80,20 @@ public class Squirt extends JavaPlugin implements Listener {
             e.printStackTrace();
         }
 
-        log.info("getMaterial = " + Material.getMaterial("X255"));
+        log.info("getMaterial = " + Material.getMaterial(name));
 
         try {
             Field field = Material.class.getDeclaredField("byId");
             field.setAccessible(true);
             Object object = field.get(null);
             Material[] byId = (Material[])object;
+            // Note that byId is fixed at 383 in vanilla Bukkit (MCPC extends to 32000)
             byId[id] = material;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        log.info("getMaterial = " + Material.getMaterial(255));
+        log.info("getMaterial = " + Material.getMaterial(id));
     }
 
     /* magic to add new fields to enums - thanks to 
